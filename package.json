@@ -1,0 +1,24 @@
+{
+  "name": "uranus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run tsx-to-jsx & esbuild ./src/uranus/index.jsx --bundle --jsx-factory=DOMcreateElement --jsx-fragment=DOMcreateFragment --outfile=./dist/index.out.js",
+    "tsx-to-jsx": "npx tsc ./src/uranus/index.tsx --jsx preserve -t es2020 --outDir ./dist"
+  },
+  "author": "Whistler, Uranus",
+  "license": "MIT",
+  "dependencies": {
+    "@types/jquery": "^3.5.14",
+    "@types/node": "^18.7.3",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.7.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.7.0"
+  }
+}
