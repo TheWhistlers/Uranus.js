@@ -1,6 +1,6 @@
 # *Uranus-@Preview*
 
-### New javascript frame.
+### New Lightweight javascript frame.
 
 English | [简体中文](./README.zh_hans.md)
 
