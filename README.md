@@ -19,7 +19,7 @@ npm i uranus -g
 uranus init program-name
 ```
 
-* *__ Configurating Packing Project Loacally (in package.json):__*
+* *__Configurating Packing Project Loacally (in package.json):__*
 
 ```json
 "scripts": {
