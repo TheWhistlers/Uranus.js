@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uranus Examples</title>
-    <link rel="shortcut icon" href="./assets/uranus-logo.ico">
+    <link rel="shortcut icon" href="./assets/favicon.ico">
     <style>
         body {
             background: rgb(232, 232, 232);
@@ -25,12 +25,13 @@
             font-size: 25px;
         }
 
-        #app p[u-data] {
+        #app span[u-text] {
             display: inline-block;
             position: relative;
             font-size: 45px;
-            width: 50px;
-            padding: 5px 5px;
+            width: auto;
+            height: auto;
+            padding: 10px 20px 10px 20px;
             border-color: black;
             border-radius: 10px;
             border-width: 2px;
@@ -44,18 +45,17 @@
             width: 50px;
             font-size: xx-large;
         }
-
     </style>
 </script>
 </head>
 <body>
     <script type="module" src="./js/index.js"></script>
     <div id="app">
-        <img src="./assets/uranus-logo.svg" alt="uranus-file-icon.ico">
+        <img src="./assets/favicon.ico" alt="uranus-file-icon.ico">
         <h1 style="margin-top: -30px; font-size: 60px;">Welcome to Uranus!</h1>
-        <button class="counter-buttons" id="counter-sub">-</button>
-        <p id="counter-content" u-data="count">{ Count }</p>
-        <button class="counter-buttons" id="counter-add">+</button>
+        <input value="-" type="button" class="counter-buttons" id="counter-sub">
+        <span u-data-type="number" u-data="count" u-text="count" id="counter-content">{ Count }</span>
+        <input value="+" type="button" class="counter-buttons" id="counter-add">
         <p>If the number is higher than 50, it'll turn to green.</p>
     </div>
 </body>

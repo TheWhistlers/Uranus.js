@@ -1,4 +1,3 @@
-
 (() => {
     // src/uranus/index.tsx
     var UranusElement = class {
@@ -38,49 +37,95 @@
         parent.appendChild(dom);
       }
     };
+
+    const data = {
+      frame: 'uranus.js'
+    }
+
+    const counterElement = document.getElementById('counter-content');
+    const counterAttrValue = counterElement.getAttribute('u-text'); 
+
+    const observe = (target, key, callBack) => {
+      let value = target[key];
+      Object.defineProperty(target, key, 
+      {
+        get: () => {
+          return value;
+        },
+        set: (newValue) => {
+          if (newValue !== value) {
+            value = newValue;
+            callBack(value, newValue);
+          }
+        }
+      });
+    };
+
+    observe(data, counterAttrValue, 
+      (value, newValue) => {
+        counterElement.textContent = newValue.toString();
+      }
+    );
+
+    var UranusParser = class {
+      static parse (element) {
+          if (UranusTextElement.isElement(element)) throw new Error('Cannot solve uranus-text-element.');
+        
+          if (element.hasAttribute('u-data') && element.hasAttribute('u-data-type')) {
+            var value = element.getAttribute('u-data');
+            var type = element.getAttribute('u-data-type');
+            if (type === 'number')data[value.toString()] = 0;
+          }
+
+          for (let i = 0; i < element.children.length; i++) {
+            this.parse(element.children[i]);
+          }
+      }
+    }
+
     UranusRenderer.render(
       new UranusElement(Symbol('div'), 
       { style: 'padding-bottom: 12px;' }, 
         [new UranusElement(Symbol('a'),
           {
             style: 'color: darkblue; text-decoration: none; font-size: 30px',
-            href: 'https://www.bing.com'
+            href: 'https://github.com/TheWhistlers/Uranus.js'
           }, 
         [new UranusTextElement('Uranus.js')])]
-      ), 
-      document.getElementById('app'));
-    var counter = 0;
-    var init = () => {
-        return {
-            count: counter 
-        } 
-    }
-    const doms = document.querySelectorAll('*[u-data]')
-    doms.forEach((element, key) => {
-        const value = element.getAttribute('u-data');
+      ), document.getElementById('app'));
+
+
+    document.querySelectorAll('*[u-text]').forEach((element) => {
+        const value = element.getAttribute('u-text');
         var formatter = element.textContent;
         const regex = /\{[^\)]+\}/g;
+
         formatter = (formatter.match(regex))[0];
-        // formatName = formatName.substring(1,formatName.length-1);
-        // formatName = formatName.replace(' ', '');
-        element.textContent = element.textContent.replace(formatter, init()[value.toString()]);
+        
+        UranusParser.parse(element);
+        element.textContent = element.textContent.replace(formatter, data[value.toString()]);
     });
-    const counterText = document.getElementById('counter-content');
-    const vCounter = init()[counterText.getAttribute('u-data').toString()];
+    
     document.getElementById('counter-add').onclick = () => {
-      counterText.textContent++; 
+      data[counterAttrValue]++; 
       setColor();
-      console.log(vCounter);
     }
 
     document.getElementById('counter-sub').onclick = () => {
-      counterText.textContent--; 
+      data[counterAttrValue]--; 
       setColor();
-      console.log(vCounter);
     }
-    const setColor = () => {
-      counterText.style.color = counterText.textContent < 50 ? 'red' : 'green';
-    };
+
+    document.body.onkeydown = (event) => {
+      if (event.key === '+') document.getElementById('counter-add').onclick.call();
+      if (event.key === '-') document.getElementById('counter-sub').onclick.call();
+    }
+
     
-    console.log(doms);
+    const setColor = () => {
+      counterElement.style.color = counterElement.textContent < 50 ? 'red' : 'green';
+      console.log(data[counterAttrValue]);
+    };
+
+
 })();

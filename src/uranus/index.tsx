@@ -4,6 +4,27 @@ interface IElement {
     children: UranusElement[];
 }
 
+var data = {
+    frame: 'uranus.js'
+};
+
+const observe = (target: object, key: string, 
+    callBack: (value: object, newValue: object) => void) => {
+    let value = target[key];
+    Object.defineProperty(target, key, 
+    {
+      get: () => {
+        return value;
+      },
+      set: (newValue) => {
+        if (newValue !== value) {
+          value = newValue;
+          callBack(value, newValue);
+        }
+      }
+    });
+  };
+
 class UranusComponent {
 
 }
@@ -45,7 +66,7 @@ class UranusTextElement extends UranusElement {
 }
 
 class UranusRenderer {
-    static render (element: any, parent: any) {
+    static render (element: any, parent: any): void {
         if (!UranusElement.isElement(element)) throw new Error('Cannot solve current type');
         
         const { type, props, children }: any = element; 
@@ -56,6 +77,25 @@ class UranusRenderer {
         
         parent.appendChild(dom);
 
+    }
+}
+
+class UranusParser {
+    static parse (element: any): void {
+        if (UranusTextElement.isElement(element)) throw new Error('Cannot solve uranus-text-element.');
+      
+        if (element.hasAttribute('u-data') && element.hasAttribute('u-data-type')) {
+          var value: any = element.getAttribute('u-data');
+          var type: any = element.getAttribute('u-data-type');
+          if (type === 'number') data[value] = 0;
+          if (type === 'string') data[value] = '';
+          if (type === 'string') data[value] = {};
+          if (type === 'array') data[value] = [];
+        }
+
+        for (let i = 0; i < element.children.length; i++) {
+          this.parse(element.children[i]);
+        }
     }
 }
 
@@ -70,3 +110,21 @@ UranusRenderer.render(
       [new UranusTextElement('Uranus.js')])]), 
     document.getElementById('app')
 );
+
+const setup: (argument: any) => void = (argument) => {
+    document.querySelectorAll('*[u-text]').forEach((element) => {
+        var value: any= '';
+        var formatter: any = '';
+
+        if (element.getAttribute('u-text') !== null && element.textContent !== null && element.textContent !== null) {
+            value = element.getAttribute('u-text');
+            formatter = element.textContent;
+            const regex = /\{[^\)]+\}/g;
+
+            if (formatter.match(regex) !== null) formatter = formatter.match(regex)[0];
+                
+            UranusParser.parse(element);
+            element.textContent = element.textContent.replace(formatter, data[value.toString()]);
+        }
+    });
+};
